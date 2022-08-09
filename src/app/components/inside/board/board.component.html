@@ -1,0 +1,141 @@
+<header class="bg-emerald-600">
+  <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div
+      class="w-full py-6 flex items-center justify-between border-b border-emerald-500 lg:border-none"
+    >
+      <div class="flex items-center">
+        <a routerLink="/workspace" class="text-emerald-900 font-semibold">
+          < Back
+        </a>
+      </div>
+      <div class="flex gap-4">
+        <input
+          *ngIf="boardInfo"
+          (ngModelChange)="titleChanged = true"
+          class="ml-10 space-x-4 text-white font-bold bg-emerald-600"
+          [(ngModel)]="boardInfo.title"
+        />
+        <button
+          class="font-medium"
+          *ngIf="titleChanged"
+          (click)="saveBoardTitle()"
+        >
+          Save
+        </button>
+      </div>
+
+      <div class="flex">
+        <button
+          class="font-medium text-small text-red-700"
+          (click)="deleteBoard()"
+        >
+          Delete board
+        </button>
+      </div>
+    </div>
+  </nav>
+</header>
+
+<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <div
+    class="grid grid-cols-2 gap-x-4 gap-y-8 sm:grid-cols-3 sm:gap-x-6 lg:grid-cols-4 xl:gap-x-8"
+  >
+    <!-- ITERATE ALL LISTS -->
+    <div
+      *ngFor="let list of lists"
+      class="relative bg-emerald-200 min-h-52 h-auto rounded font-semibold text-sm py-4 px-4"
+    >
+      <div class="flex gap-2 pb-4">
+        <p
+          (click)="editingTitle(list, true)"
+          class="hover:cursor-pointer"
+          *ngIf="!editTitle[list.id]"
+        >
+          {{ list.title }}
+        </p>
+        <input
+          [(ngModel)]="list.title"
+          *ngIf="editTitle[list.id]"
+          class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm"
+        />
+        <button
+          class="font-medium"
+          *ngIf="editTitle[list.id]"
+          (click)="updateListTitle(list)"
+        >
+          Save
+        </button>
+      </div>
+
+      <!-- ITERATE LIST CARDS -->
+      <div class="flex flex-col items-center gap-2">
+        <div
+          class="h-auto w-full flex flex-col gap-2 hover:cursor-pointer"
+          *ngFor="let card of listCards[list.id]"
+          (click)="editingCard(card, true)"
+        >
+          <p class="h-10 py-2 px-2 bg-white" *ngIf="!editCard[card.id]">
+            {{ card.title }}
+          </p>
+          <input
+            [(ngModel)]="card.title"
+            *ngIf="editCard[card.id]"
+            class="block px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm"
+          />
+          <div class="flex align-items-center justify-between">
+            <button
+              class="font-medium"
+              *ngIf="editCard[card.id]"
+              (click)="updateCard(card)"
+            >
+              Update
+            </button>
+
+            <button
+              class="font-medium text-red-600"
+              *ngIf="editCard[card.id]"
+              (click)="deleteCard(card)"
+            >
+              Delete
+            </button>
+          </div>
+        </div>
+        <div
+          (click)="addCard(list)"
+          class="pt-8 text-gray-500 hover:cursor-pointer"
+        >
+          + Add a card
+        </div>
+        <button
+          class="font-medium text-small text-red-700"
+          (click)="deleteBoardList(list)"
+        >
+          Delete list
+        </button>
+      </div>
+    </div>
+
+    <div
+      (click)="addList()"
+      class="relative bg-emerald-500 h-16 rounded font-semibold text-lg py-4 px-4 hover:cursor-pointer"
+    >
+      + New list
+    </div>
+  </div>
+
+  <div class="flex gap-4 py-12 items-center">
+    <span class="text-3xl font-extrabold text-gray-900 block">Invite</span>
+
+    <input
+      [(ngModel)]="addUserEmail"
+      placeholder="john@doe.com"
+      class="block px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm"
+    />
+    <button
+      (click)="addUser()"
+      class="inline-flex items-center px-2.5 py-1.5 border border-transparent text-xs font-medium rounded shadow-sm text-white bg-emerald-600 hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500"
+    >
+      Invite
+    </button>
+  </div>
+</main>
